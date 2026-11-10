@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS — Creative Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --neon: #00FF85;
+    --neon-dim: rgba(0,255,133,0.12);
+    --neon-border: rgba(0,255,133,0.3);
+    --bg: #080808;
+    --bg-2: #0f0f0f;
+    --bg-3: #161616;
+    --bg-4: #1e1e1e;
+    --text: #f0f0f0;
+    --text-muted: #888;
+    --text-dim: #555;
+    --border: rgba(255,255,255,0.07);
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: default;
+}
+
+  /* ── GLOW CURSOR ── */
+#glow-cursor {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,255,133,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s;
+}
+
+  /* ── NAV ── */
+nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 5%;
+    background: rgba(8,8,8,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+}
+.logo {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--text);
+    text-decoration: none;
+    position: relative;
+}
+.logo span { color: var(--neon); }
+.logo::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--neon);
+    transition: width 0.4s;
+}
+.logo:hover::after { width: 100%; }
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+}
+nav ul a {
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+}
+nav ul a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--neon);
+    transition: width 0.3s;
+}
+nav ul a:hover::after { width: 100%; }
+nav ul a:hover { color: var(--neon); }
+.nav-cta {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--neon);
+    padding: 0.55rem 1.4rem;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+.nav-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.4s;
+}
+.nav-cta:hover::before { transform: translateX(0); }
+.nav-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(0,255,133,0.3);
+}
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+}
+.hamburger span {
+    display: block;
+    width: 24px;
+    height: 1.5px;
+    background: var(--text);
+    transition: 0.3s;
+}
+
+  /* ── HERO ── */
+#hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 5% 6rem;
+    position: relative;
+    overflow: hidden;
+}
+
+  /* 3D Scene */
+.hero-3d-scene {
+    position: absolute;
+    right: 2%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 500px;
+    height: 500px;
+    pointer-events: none;
+    z-index: 1;
+}
+.robot-container {
+    width: 100%;
+    height: 100%;
+    perspective: 800px;
+}
+.robot {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease-out;
+}
+  /* Robot Parts */
+.robot-head {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%) translateZ(30px);
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(ellipse at 30% 30%, #2a2a2a, #0a0a0a);
+    border: 2px solid var(--neon-border);
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(0,255,133,0.1), inset 0 0 40px rgba(0,255,133,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.robot-head .visor {
+    width: 60px;
+    height: 30px;
+    background: linear-gradient(135deg, var(--neon), #00cc6a);
+    border-radius: 8px;
+    box-shadow: 0 0 30px rgba(0,255,133,0.3);
+    animation: visorPulse 2s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+}
+.robot-head .visor::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: visorSweep 3s ease-in-out infinite;
+}
+@keyframes visorPulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(0,255,133,0.3); }
+    50% { box-shadow: 0 0 60px rgba(0,255,133,0.6); }
+}
+@keyframes visorSweep {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+.robot-neck {
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    transform: translateX(-50%) translateZ(20px);
+    width: 30px;
+    height: 40px;
+    background: #1a1a1a;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  .robot-body {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translateX(-50%) translateZ(15px);
+    width: 140px;
+    height: 120px;
+    background: radial-gradient(ellipse at 30% 30%, #222, #0a0a0a);
+    border: 2px solid var(--neon-border);
+    border-radius: 16px;
+    box-shadow: 0 0 40px rgba(0,255,133,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .robot-body .core {
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, var(--neon), #00cc6a);
+    border-radius: 50%;
+    box-shadow: 0 0 40px rgba(0,255,133,0.4);
+    animation: corePulse 1.5s ease-in-out infinite;
+  }
+  @keyframes corePulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(0,255,133,0.4); }
+    50% { transform: scale(1.2); box-shadow: 0 0 80px rgba(0,255,133,0.8); }
+  }
+  .robot-arm {
+    position: absolute;
+    width: 18px;
+    height: 70px;
+    background: linear-gradient(180deg, #1a1a1a, #0a0a0a);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    top: 50%;
+  }
+  .robot-arm.left {
+    left: 5%;
+    transform: translateY(-50%) rotate(15deg) translateZ(10px);
+    transform-origin: top center;
+    animation: armSwingLeft 3s ease-in-out infinite;
+  }
+  .robot-arm.right {
+    right: 5%;
+    transform: translateY(-50%) rotate(-15deg) translateZ(10px);
+    transform-origin: top center;
+    animation: armSwingRight 3s ease-in-out infinite;
+  }
+  @keyframes armSwingLeft {
+    0%, 100% { transform: translateY(-50%) rotate(15deg) translateZ(10px); }
+    50% { transform: translateY(-50%) rotate(-5deg) translateZ(10px); }
+  }
+  @keyframes armSwingRight {
+    0%, 100% { transform: translateY(-50%) rotate(-15deg) translateZ(10px); }
+    50% { transform: translateY(-50%) rotate(5deg) translateZ(10px); }
+  }
+  .robot-leg {
+    position: absolute;
+    width: 22px;
+    height: 60px;
+    background: linear-gradient(180deg, #1a1a1a, #0a0a0a);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    bottom: 0;
+  }
+  .robot-leg.left {
+    left: 30%;
+    transform: translateX(-50%) translateZ(10px);
+    animation: legWalk 2s ease-in-out infinite;
+  }
+  .robot-leg.right {
+    right: 30%;
+    transform: translateX(50%) translateZ(10px);
+    animation: legWalk 2s ease-in-out infinite reverse;
+  }
+  @keyframes legWalk {
+    0%, 100% { transform: translateX(-50%) translateZ(10px) rotate(0deg); }
+    50% { transform: translateX(-50%) translateZ(10px) rotate(8deg); }
+  }
+  /* Antenna */
+  .robot-antenna {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%) translateZ(40px);
+    width: 2px;
+    height: 30px;
+    background: var(--neon);
+    box-shadow: 0 0 10px rgba(0,255,133,0.3);
+  }
+  .robot-antenna::after {
+    content: '✦';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--neon);
+    font-size: 12px;
+    animation: sparkle 1.5s ease-in-out infinite;
+  }
+  @keyframes sparkle {
+    0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+    50% { opacity: 0.3; transform: translateX(-50%) scale(0.5); }
+  }
+
+  /* 3D Floating Particles */
+  .particles-3d {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--neon);
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: particleFloat 6s ease-in-out infinite;
+  }
+  .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+  .particle:nth-child(2) { top: 60%; left: 5%; animation-delay: 1s; width: 6px; height: 6px; }
+  .particle:nth-child(3) { top: 30%; right: 15%; animation-delay: 2s; }
+  .particle:nth-child(4) { top: 70%; right: 10%; animation-delay: 0.5s; width: 3px; height: 3px; }
+  .particle:nth-child(5) { top: 45%; left: 50%; animation-delay: 1.5s; width: 5px; height: 5px; opacity: 0.5; }
+  @keyframes particleFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+    50% { transform: translate(20px, -30px) scale(1.5); opacity: 0.8; }
+  }
+
+  /* Grid Background */
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 80%);
+  }
+
+  /* Hero Content */
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--neon-dim);
+    border: 1px solid var(--neon-border);
+    padding: 0.4rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--neon);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.1s forwards;
+  }
+  .hero-badge .dot {
+    width: 6px;
+    height: 6px;
+    background: var(--neon);
+    border-radius: 50%;
+    animation: pulseDot 1.5s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.5); }
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(3.2rem, 5vw, 6.5rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.8rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .glitch-text {
+    position: relative;
+    display: inline-block;
+  }
+  .glitch-text::before,
+  .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+  }
+  .glitch-text::before {
+    color: #ff00ff;
+    z-index: -1;
+    animation: glitch1 3s infinite;
+  }
+  .glitch-text::after {
+    color: #00ffff;
+    z-index: -1;
+    animation: glitch2 3s infinite;
+  }
+  @keyframes glitch1 {
+    0%, 90%, 100% { transform: translate(0); }
+    92% { transform: translate(-4px, 2px); }
+    94% { transform: translate(4px, -2px); }
+    96% { transform: translate(-2px, 4px); }
+    98% { transform: translate(2px, -4px); }
+  }
+  @keyframes glitch2 {
+    0%, 90%, 100% { transform: translate(0); }
+    92% { transform: translate(4px, -2px); }
+    94% { transform: translate(-4px, 2px); }
+    96% { transform: translate(2px, -4px); }
+    98% { transform: translate(-2px, 4px); }
+  }
+  .highlight {
+    background: linear-gradient(135deg, var(--neon), #00cc6a, var(--neon));
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease-in-out infinite;
+  }
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    max-width: 520px;
+    margin-bottom: 2.8rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.35s forwards;
+  }
+  .hero-sub .highlight-light {
+    color: var(--neon);
+    font-weight: 400;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--neon), #00cc6a);
+    color: var(--bg);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 1rem 2.2rem;
+    border-radius: 2px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+  .btn-primary:hover::before { transform: translateX(0); }
+  .btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 0 40px rgba(0,255,133,0.4);
+  }
+  .btn-primary svg { width: 18px; height: 18px; transition: transform 0.3s; }
+  .btn-primary:hover svg { transform: translateX(4px); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.8rem 1.8rem;
+    border: 1px solid var(--neon-border);
+    border-radius: 2px;
+    background: var(--neon-dim);
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-secondary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--neon);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+    z-index: 0;
+  }
+  .btn-secondary:hover::before { transform: scaleX(1); }
+  .btn-secondary span { position: relative; z-index: 1; transition: color 0.3s; }
+  .btn-secondary:hover span { color: var(--bg); }
+  .btn-secondary svg {
+    position: relative;
+    z-index: 1;
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s;
+  }
+  .btn-secondary:hover svg { transform: translateX(4px); }
+
+  .hero-stats {
+    display: flex;
+    gap: 4rem;
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+    opacity: 0;
+    animation: fadeUp 0.8s 0.65s forwards;
+  }
+  .stat-item {
+    position: relative;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+  .stat-num .neon { color: var(--neon); }
+  .stat-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 0.3rem;
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-dim);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: bounceDown 2s ease-in-out infinite;
+    opacity: 0.5;
+    z-index: 2;
+  }
+  .scroll-indicator .line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--text-dim), transparent);
+  }
+  @keyframes bounceDown {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTION COMMONS ── */
+  section { padding: 7rem 5%; position: relative; }
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--neon);
+    margin-bottom: 1.2rem;
+  }
+  .section-label::before {
+    content: '';
+    width: 30px;
+    height: 2px;
+    background: var(--neon);
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .section-sub {
+    color: var(--text-muted);
+    font-weight: 300;
+    max-width: 500px;
+    margin-top: 1rem;
+  }
+
+  /* ── SERVICES ── */
+  #services { background: var(--bg-2); }
+  .services-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    margin-bottom: 4rem;
+    flex-wrap: wrap;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .service-card {
+    background: var(--bg-2);
+    padding: 2.5rem;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--neon-dim), transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .service-card:hover::before { opacity: 1; }
+  .service-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: linear-gradient(90deg, var(--neon), transparent);
+    transition: width 0.4s ease;
+  }
+  .service-card:hover::after { width: 100%; }
+  .service-card:hover { transform: translateY(-4px); background: var(--bg-3); }
+  .service-icon {
+    width: 48px; height: 48px;
+    border: 1px solid var(--neon-border);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.8rem;
+    color: var(--neon);
+    transition: all 0.4s;
+  }
+  .service-card:hover .service-icon {
+    background: var(--neon-dim);
+    transform: scale(1.05);
+  }
+  .service-icon svg { width: 20px; height: 20px; }
+  .service-num {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    margin-bottom: 0.8rem;
+  }
+  .service-name {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+  }
+  .service-desc { font-size: 0.9rem; color: var(--text-muted); font-weight: 300; line-height: 1.65; }
+
+  /* ── PORTFOLIO ── */
+  #portfolio { background: var(--bg); }
+  .portfolio-head { margin-bottom: 3.5rem; }
+  .portfolio-filter {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+  .filter-btn {
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 0.45rem 1.1rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    color: var(--neon);
+    border-color: var(--neon-border);
+    background: var(--neon-dim);
+  }
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 16px;
+  }
+  .proj {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .proj:hover { transform: translateY(-4px) scale(1.01); }
+  .proj-1 { grid-column: span 7; grid-row: span 2; }
+  .proj-2 { grid-column: span 5; }
+  .proj-3 { grid-column: span 5; }
+  .proj-4 { grid-column: span 4; }
+  .proj-5 { grid-column: span 4; }
+  .proj-6 { grid-column: span 4; }
+  .proj-bg {
+    width: 100%; height: 100%;
+    min-height: 220px;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.5rem;
+    position: relative;
+    transition: transform 0.6s ease;
+  }
+  .proj:hover .proj-bg { transform: scale(1.03); }
+  .proj-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .proj:hover .proj-overlay { opacity: 1; }
+  .proj-info {
+    position: relative;
+    z-index: 1;
+    transform: translateY(8px);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  .proj:hover .proj-info { opacity: 1; transform: translateY(0); }
+  .proj-cat {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--neon);
+    margin-bottom: 0.3rem;
+  }
+  .proj-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .pb-1 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+  .pb-2 { background: linear-gradient(135deg, #1a0a00 0%, #3d1500 100%); }
+  .pb-3 { background: linear-gradient(135deg, #0a1a0a 0%, #0f3020 100%); }
+  .pb-4 { background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); }
+  .pb-5 { background: linear-gradient(135deg, #1a0a1a 0%, #2d1b3d 100%); }
+  .pb-6 { background: linear-gradient(135deg, #0a1a1a 0%, #0f2d3d 100%); }
+  .proj-visual {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.35;
+    transition: opacity 0.3s;
+  }
+  .proj:hover .proj-visual { opacity: 0.15; }
+
+  /* ── PROCESS ── */
+  #process {
+    background: var(--bg-2);
+    padding: 7rem 5%;
+  }
+  .process-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+  .process-text p { color: var(--text-muted); font-weight: 300; margin-top: 1.5rem; line-height: 1.8; }
+  .process-steps { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: flex;
+    gap: 1.5rem;
+    position: relative;
+    padding-bottom: 2rem;
+  }
+  .step:last-child { padding-bottom: 0; }
+  .step-left { display: flex; flex-direction: column; align-items: center; }
+  .step-dot {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--neon-border);
+    background: var(--neon-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--neon);
+    flex-shrink: 0;
+    transition: all 0.3s;
+  }
+  .step:hover .step-dot {
+    background: var(--neon);
+    color: var(--bg);
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(0,255,133,0.3);
+  }
+  .step-line {
+    flex: 1;
+    width: 1px;
+    background: var(--border);
+    margin-top: 6px;
+  }
+  .step:last-child .step-line { display: none; }
+  .step-content { padding-top: 6px; }
+  .step-name {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  .step-desc { font-size: 0.88rem; color: var(--text-muted); font-weight: 300; line-height: 1.65; }
+  .process-cta-card {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2.5rem;
+    margin-top: 2rem;
+    transition: all 0.3s;
+  }
+  .process-cta-card:hover {
+    border-color: var(--neon-border);
+    transform: translateY(-2px);
+  }
+  .process-cta-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+  }
+  .process-cta-card p { color: var(--text-muted); font-weight: 300; font-size: 0.92rem; margin-bottom: 1.8rem; }
+  .process-cta-card .btn-primary { margin-top: 0.5rem; }
+
+  /* ── TESTIMONIALS ── */
+  #testimonials { background: var(--bg); }
+  .testi-head { margin-bottom: 3.5rem; }
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .testi-card {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2.2rem;
+    position: relative;
+    transition: all 0.3s;
+  }
+  .testi-card:hover {
+    border-color: var(--neon-border);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  }
+  .testi-quote {
+    font-size: 2.5rem;
+    color: var(--neon);
+    line-height: 1;
+    font-family: var(--font-display);
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+  .testi-text {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.75;
+    margin-bottom: 1.8rem;
+    font-style: italic;
+  }
+  .testi-rating {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 1.2rem;
+  }
+  .star {
+    width: 14px; height: 14px;
+    background: var(--neon);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+  .testi-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border);
+  }
+  .author-avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .av-1 { background: #001a0d; color: var(--neon); border: 1px solid var(--neon-border); }
+  .av-2 { background: #1a0010; color: #ff6bc1; border: 1px solid rgba(255,107,193,0.3); }
+  .av-3 { background: #00101a; color: #6bb5ff; border: 1px solid rgba(107,181,255,0.3); }
+  .author-name {
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 0.1rem;
+  }
+  .author-role { font-size: 0.78rem; color: var(--text-dim); letter-spacing: 0.05em; }
+
+  /* ── ABOUT ── */
+  #about { background: var(--bg-2); }
+  .about-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+  .about-text h2 { margin-bottom: 1.5rem; }
+  .about-lead {
+    font-size: 1rem;
+    color: var(--neon);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--neon-border);
+  }
+  .about-body {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.9;
+    margin-bottom: 1.2rem;
+  }
+  .about-stats {
+    display: flex;
+    gap: 2.5rem;
+    padding: 1.8rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 1.5rem 0;
+  }
+  .about-stat-num {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .about-stat-num .neon { color: var(--neon); }
+  .about-stat-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 5px;
+  }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--bg); }
+  .contact-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .contact-info h2 { margin-bottom: 1.2rem; }
+  .contact-info p { color: var(--text-muted); font-weight: 300; margin-bottom: 2.5rem; line-height: 1.8; }
+  .contact-details { display: flex; flex-direction: column; gap: 1.2rem; }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    transition: all 0.3s;
+  }
+  .contact-item:hover { transform: translateX(4px); color: var(--text); }
+  .contact-item-icon {
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--neon);
+    flex-shrink: 0;
+  }
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .form-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .form-input, .form-textarea, .form-select {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.85rem 1rem;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 300;
+    transition: all 0.3s;
+    outline: none;
+    width: 100%;
+    appearance: none;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: var(--neon-border);
+    background: var(--bg-4);
+    box-shadow: 0 0 20px rgba(0,255,133,0.05);
+  }
+  .form-input::placeholder, .form-textarea::placeholder { color: var(--text-dim); }
+  .form-textarea { resize: vertical; min-height: 130px; }
+  .form-select option { background: var(--bg-3); }
+  .form-note { font-size: 0.78rem; color: var(--text-dim); text-align: center; margin-top: 0.5rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 3rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .footer-left { display: flex; flex-direction: column; gap: 0.5rem; }
+  .footer-brand {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+  .footer-brand span { color: var(--neon); }
+  .footer-copy { font-size: 0.78rem; color: var(--text-dim); }
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a {
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--neon); }
+  .footer-socials { display: flex; gap: 1rem; }
+  .social-btn {
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .social-btn:hover {
+    border-color: var(--neon-border);
+    color: var(--neon);
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(0,255,133,0.1);
+  }
+  .social-btn svg { width: 15px; height: 15px; }
+
+  /* ── REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 992px) {
+    .hero-3d-scene {
+      width: 300px;
+      height: 300px;
+      right: 0;
+      opacity: 0.4;
+    }
+    .process-wrap { grid-template-columns: 1fr; gap: 3rem; }
+    .about-wrap { grid-template-columns: 1fr; gap: 3rem; }
+    .contact-wrap { grid-template-columns: 1fr; gap: 3rem; }
+  }
+  @media (max-width: 768px) {
+    nav ul, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    .hero-3d-scene {
+      width: 200px;
+      height: 200px;
+      opacity: 0.3;
+      top: 60%;
+    }
+    .robot-head { width: 60px; height: 60px; }
+    .robot-head .visor { width: 36px; height: 18px; }
+    .robot-body { width: 80px; height: 70px; }
+    .robot-body .core { width: 24px; height: 24px; }
+    .robot-arm { width: 12px; height: 40px; }
+    .robot-leg { width: 14px; height: 35px; }
+    .robot-neck { width: 18px; height: 24px; }
+    .hero-stats { gap: 2rem; flex-wrap: wrap; }
+    .portfolio-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .proj-1, .proj-2, .proj-3, .proj-4, .proj-5, .proj-6 {
+      grid-column: span 2;
+    }
+    .proj-4, .proj-5 { grid-column: span 1; }
+    .proj-6 { grid-column: span 2; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; align-items: flex-start; }
+    .footer-links { flex-wrap: wrap; gap: 1rem; }
+    .services-head { flex-direction: column; align-items: flex-start; }
+    .scroll-indicator { display: none; }
+    #glow-cursor { display: none; }
+  }
+  @media (max-width: 480px) {
+    section { padding: 5rem 5%; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .proj-1, .proj-2, .proj-3, .proj-4, .proj-5, .proj-6 { grid-column: span 1; }
+    .testi-grid { grid-template-columns: 1fr; }
+    .hero-3d-scene { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Glow Cursor -->
+<div id="glow-cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">NEX<span>U</span>S</a>
+  <ul>
+    <li><a href="#services">Layanan</a></li>
+    <li><a href="#portfolio">Portofolio</a></li>
+    <li><a href="#process">Proses</a></li>
+    <li><a href="#testimonials">Klien</a></li>
+    <li><a href="#about">Tentang</a></li>
+    <li><a href="#contact">Kontak</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Mulai Proyek</a>
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+
+  <!-- 3D Scene -->
+  <div class="hero-3d-scene" id="scene3d">
+    <div class="robot-container">
+      <div class="robot" id="robot">
+        <!-- Antenna -->
+        <div class="robot-antenna"></div>
+        <!-- Head -->
+        <div class="robot-head">
+          <div class="visor"></div>
+        </div>
+        <!-- Neck -->
+        <div class="robot-neck"></div>
+        <!-- Arms -->
+        <div class="robot-arm left"></div>
+        <div class="robot-arm right"></div>
+        <!-- Body -->
+        <div class="robot-body">
+          <div class="core"></div>
+        </div>
+        <!-- Legs -->
+        <div class="robot-leg left"></div>
+        <div class="robot-leg right"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Particles -->
+  <div class="particles-3d">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      AI-Powered Creative Agency
+    </div>
+    <h1>
+      From <span class="highlight glitch-text" data-text="Idea">Idea</span> to<br>
+      Intelligent <span class="highlight glitch-text" data-text="Product">Product</span>
+    </h1>
+    <p class="hero-sub">
+    Kami merancang <span class="highlight-light">produk berbasis AI</span> yang mengotomatisasi 
+    alur kerja, meningkatkan efisiensi, dan membuka aliran pendapatan baru.
+    </p>
+    <div class="hero-actions">
+    <a href="#portfolio" class="btn-primary">
+        START NOW
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="#portfolio" class="btn-secondary">
+        <span>VIEW DEMO</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </a>
+    </div>
+    <div class="hero-stats">
+    <div class="stat-item">
+        <div class="stat-num"><span class="neon">240</span>%</div>
+        <div class="stat-label">PERFORMANCE</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num"><span class="neon">8</span>+</div>
+        <div class="stat-label">TAHUN PENGALAMAN</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num"><span class="neon">98</span>%</div>
+        <div class="stat-label">KLIEN PUAS</div>
+    </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Scroll to explore more</span>
+    <div class="line"></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-head reveal">
+    <div>
+      <div class="section-label">Layanan Kami</div>
+      <h2>We Build with <span style="color:var(--neon)">Precision</span></h2>
+      <p class="section-sub">Dari identitas merek hingga kampanye digital — solusi desain menyeluruh.</p>
+    </div>
+    <a href="#contact" class="btn-secondary" style="flex-shrink:0;">
+      <span>Konsultasi Gratis</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+      <div class="service-num">01</div>
+      <div class="service-name">Brand Identity</div>
+      <p class="service-desc">Membangun identitas merek yang kohesif dan berkesan — dari logo hingga panduan gaya.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+      <div class="service-num">02</div>
+      <div class="service-name">Desain Grafis</div>
+      <p class="service-desc">Materi visual berkualitas tinggi untuk marketing, publikasi, dan komunikasi merek.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+      <div class="service-num">03</div>
+      <div class="service-name">UI/UX Design</div>
+      <p class="service-desc">Antarmuka digital yang intuitif dan elegan — website, aplikasi mobile, dan pengalaman pengguna.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      <div class="service-num">04</div>
+      <div class="service-name">Motion Graphics</div>
+      <p class="service-desc">Animasi dan konten video dinamis untuk menghidupkan cerita merek Anda di era digital.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+      <div class="service-num">05</div>
+      <div class="service-name">Packaging Design</div>
+      <p class="service-desc">Desain kemasan produk yang menarik dan fungsional — first impression yang tak terlupakan.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
+      <div class="service-num">06</div>
+      <div class="service-name">Social Media Kit</div>
+      <p class="service-desc">Template dan aset visual konsisten untuk seluruh platform media sosial Anda.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="portfolio-head reveal">
+    <div class="section-label">Karya Terbaik</div>
+    <h2>Portofolio Pilihan</h2>
+    <div class="portfolio-filter">
+      <button class="filter-btn active">Semua</button>
+      <button class="filter-btn">Branding</button>
+      <button class="filter-btn">UI/UX</button>
+      <button class="filter-btn">Packaging</button>
+      <button class="filter-btn">Motion</button>
+    </div>
+  </div>
+  <div class="portfolio-grid reveal">
+    <div class="proj proj-1">
+      <div class="proj-bg" style="min-height:460px; background-image:url('https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800'); background-size:cover; background-position:center;">
+        <div class="proj-visual" style="color:#00aaff">
+          <svg width="280" height="280" viewBox="0 0 280 280">
+            <circle cx="140" cy="140" r="120" fill="none" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+            <circle cx="140" cy="140" r="80" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+            <circle cx="140" cy="140" r="40" fill="currentColor" opacity="0.15"/>
+          </svg>
+        </div>
+        <div class="proj-overlay"></div>
+        <div class="proj-info">
+          <div class="proj-cat">Brand Identity</div>
+          <div class="proj-title">Aether Tech — Rebranding Korporat</div>
+        </div>
+      </div>
+    </div>
+    <div class="proj proj-2">
+      <div class="proj-bg" style="min-height:220px; background-image: url(https://media.istockphoto.com/id/1077146870/id/foto/tanda-kedai-kopi-bola-lampu-di-dinding-bata-hitam.webp?a=1&b=1&s=612x612&w=0&k=20&c=9mt0n1Gfi8mrCMGfmH4RRWA3W-MgyjwSlhIXD74S5C4=);">
+        <div class="proj-visual" style="color:#ff6b35">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <rect x="20" y="20" width="120" height="120" rx="4" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+            <rect x="40" y="40" width="80" height="80" rx="2" fill="currentColor" opacity="0.2"/>
+            <text x="80" y="90" text-anchor="middle" fill="currentColor" font-size="36" font-weight="bold" opacity="0.6">N</text>
+          </svg>
+        </div>
+        <div class="proj-overlay"></div>
+        <div class="proj-info">
+          <div class="proj-cat">Logo & Type</div>
+          <div class="proj-title">Norde Coffee</div>
+        </div>
+      </div>
+    </div>
+    <div class="proj proj-3">
+      <div class="proj-bg" style="min-height:220px; background-image: url(https://images.unsplash.com/photo-1617825295690-28ae56c56135?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cGFja2FnaW5nfGVufDB8fDB8fHww);">
+        <div class="proj-visual" style="color:#00ff85">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <polygon points="80,15 145,55 145,105 80,145 15,105 15,55" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+            <polygon points="80,35 125,60 125,100 80,125 35,100 35,60" fill="currentColor" opacity="0.15"/>
+          </svg>
+        </div>
+        <div class="proj-overlay"></div>
+        <div class="proj-info">
+          <div class="proj-cat">Packaging</div>
+          <div class="proj-title">Lumis Skincare</div>
+        </div>
+      </div>
+    </div>
+    <div class="proj proj-4">
+      <div class="proj-bg" style="min-height:200px; background-image: url(https://images.unsplash.com/photo-1541462608143-67571c6738dd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHVpJTIwdXglMjBkZXNpZ258ZW58MHx8MHx8fDA%3D);">
+        <div class="proj-visual" style="color:#aaaaaa">
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            <rect x="10" y="50" width="20" height="60" fill="currentColor" opacity="0.4"/>
+            <rect x="40" y="30" width="20" height="80" fill="currentColor" opacity="0.5"/>
+            <rect x="70" y="10" width="20" height="100" fill="currentColor" opacity="0.6"/>
+            <rect x="100" y="40" width="20" height="70" fill="currentColor" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="proj-overlay"></div>
+        <div class="proj-info">
+          <div class="proj-cat">UI/UX</div>
+          <div class="proj-title">FinTrack Dashboard</div>
+        </div>
+      </div>
+    </div>
+    <div class="proj proj-5">
+      <div class="proj-bg" style="min-height:200px; background-image: url(https://images.unsplash.com/photo-1745778640291-f364d3eee2aa?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG1vdGlvbiUyMGdyYXBoaWNzfGVufDB8fDB8fHww);">
+        <div class="proj-visual" style="color:#cc77ff">
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="45" fill="none" stroke="currentColor" stroke-width="2" opacity="0.4"/>
+            <circle cx="60" cy="60" r="28" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
+            <circle cx="60" cy="60" r="12" fill="currentColor" opacity="0.5"/>
+          </svg>
+        </div>
+        <div class="proj-overlay"></div>
+        <div class="proj-info">
+          <div class="proj-cat">Motion</div>
+          <div class="proj-title">Prism Media</div>
+        </div>
+      </div>
+    </div>
+    <div class="proj proj-6">
+      <div class="proj-bg" style="min-height:200px; background-image: url(https://plus.unsplash.com/premium_photo-1700195543767-8c717224a9ba?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dmF1bHQlMjBhcmNoaXRlY3R1cmUlMjBicmFuZCUyMHNpc3RlbXxlbnwwfHwwfHx8MA%3D%3D);">
+        <div class="proj-visual" style="color:#44aacc">
+          <svg width="240" height="120" viewBox="0 0 240 120">
+            <rect x="10" y="20" width="60" height="80" rx="3" fill="currentColor" opacity="0.2"/>
+            <rect x="90" y="30" width="60" height="60" rx="3" fill="currentColor" opacity="0.3"/>
+            <rect x="170" y="10" width="60" height="90" rx="3" fill="currentColor" opacity="0.2"/>
+          </svg>
+        </div>
+        <div class="proj-overlay"></div>
+        <div class="proj-info">
+          <div class="proj-cat">Brand System</div>
+          <div class="proj-title">Vault Architecture</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="process-wrap">
+    <div class="process-text reveal">
+      <div class="section-label">Cara Kerja</div>
+      <h2>Proses Kreatif<br>Kami</h2>
+      <p>Setiap proyek dimulai dengan pemahaman mendalam tentang bisnis, audiens, dan tujuan Anda. Kami percaya bahwa desain terbaik lahir dari riset yang kuat dan kolaborasi yang terbuka.</p>
+      <div class="process-steps">
+        <div class="step">
+          <div class="step-left"><div class="step-dot">01</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-name">Discovery & Riset</div>
+            <p class="step-desc">Sesi deep dive untuk memahami brand, kompetitor, dan target pasar Anda secara menyeluruh.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-left"><div class="step-dot">02</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-name">Strategi & Konsep</div>
+            <p class="step-desc">Mengembangkan arah kreatif yang strategis dan beberapa alternatif konsep untuk dipilih.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-left"><div class="step-dot">03</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-name">Desain & Iterasi</div>
+            <p class="step-desc">Proses desain kolaboratif dengan siklus revisi yang terstruktur dan feedback yang jelas.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-left"><div class="step-dot">04</div></div>
+          <div class="step-content">
+            <div class="step-name">Finalisasi & Handoff</div>
+            <p class="step-desc">Pengiriman aset final dalam format yang siap pakai, lengkap dengan brand guidelines.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="process-cta-card">
+        <div class="section-label">Mulai Sekarang</div>
+        <h3>Siap Membangun<br>Brand Impian Anda?</h3>
+        <p>Jadwalkan sesi konsultasi gratis 30 menit bersama tim kreatif kami. Tanpa komitmen, penuh insights.</p>
+        <a href="#contact" class="btn-primary" style="display:inline-flex; text-decoration:none;">
+          Konsultasi Gratis
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border);">
+          <div style="display:flex; flex-direction:column; gap:0.6rem;">
+            <div style="display:flex; align-items:center; gap:10px; font-size:0.82rem; color:var(--text-muted);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--neon)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              Revisi tidak terbatas dalam scope
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:0.82rem; color:var(--text-muted);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--neon)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              Source file tersedia
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:0.82rem; color:var(--text-muted);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--neon)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              Brand guidelines lengkap
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="testi-head reveal">
+    <div class="section-label">Kata Klien</div>
+    <h2>Kepercayaan yang<br>Kami Jaga</h2>
+  </div>
+  <div class="testi-grid reveal">
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="testi-rating"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+      <p class="testi-text">NEXUS benar-benar mengubah cara kami dipersepsi di pasar. Identitas baru kami meningkatkan brand recall secara signifikan.</p>
+      <div class="testi-author">
+        <div class="author-avatar av-1">AR</div>
+        <div>
+          <div class="author-name">Ahmad Rizky</div>
+          <div class="author-role">CEO, Aether Technologies</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="testi-rating"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+      <p class="testi-text">Proses kerjanya sangat profesional dan transparan. Dari brief hingga deliverable, tim NEXUS selalu on time.</p>
+      <div class="testi-author">
+        <div class="author-avatar av-2">SW</div>
+        <div>
+          <div class="author-name">Sarah Wijaya</div>
+          <div class="author-role">Brand Director, Lumis Beauty</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="testi-rating"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+      <p class="testi-text">Mereka tidak hanya mendesain — mereka berpikir strategis. Dashboard yang mereka rancang meningkatkan user retention 40%.</p>
+      <div class="testi-author">
+        <div class="author-avatar av-3">BH</div>
+        <div>
+          <div class="author-name">Budi Hartono</div>
+          <div class="author-role">Product Manager, FinTrack</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-wrap">
+    <div class="about-text reveal">
+      <div class="section-label">Tentang Kami</div>
+      <h2>Studio Kreatif<br>di Balik <span style="color:var(--neon)">Produk</span><br>Terbaik</h2>
+      <p class="about-lead">"Kami bukan sekadar membuat logo — kami membangun sistem visual yang berbicara, beresonansi, dan bertahan lama."</p>
+      <p class="about-body">NEXUS lahir dari obsesi terhadap desain yang bermakna. Sejak 2016, kami telah membantu puluhan brand — dari startup ambisius hingga perusahaan Fortune 500 — menemukan dan mengekspresikan identitas visual mereka.</p>
+      <div class="about-stats">
+        <div>
+          <div class="about-stat-num"><span class="neon">8</span>+</div>
+          <div class="about-stat-label">Tahun Aktif</div>
+        </div>
+        <div>
+          <div class="about-stat-num"><span class="neon">12</span></div>
+          <div class="about-stat-label">Kreator Tim</div>
+        </div>
+        <div>
+          <div class="about-stat-num"><span class="neon">4</span></div>
+          <div class="about-stat-label">Penghargaan</div>
+        </div>
+      </div>
+      <div class="about-ctas" style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <a href="#portfolio" class="btn-primary" style="display:inline-flex; text-decoration:none;">
+          Lihat Karya Kami
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#contact" class="btn-secondary" style="text-decoration:none;">
+          <span>Ngobrol Dengan Kami</span>
+        </a>
+      </div>
+    </div>
+    <div class="about-visual reveal">
+  <div style="width:100%; aspect-ratio:4/5; background:var(--bg-3); border:1px solid var(--border); overflow:hidden; border-radius:4px; display:flex; align-items:center; justify-content:center;">
+    <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;">
+    <source src="C:\Users\LENOVO\Downloads\danuskarathnayaka1_pindown.io_1781797610.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+        <rect x="20" y="40" width="260" height="320" rx="2" fill="none" stroke="rgba(0,255,133,0.1)" stroke-width="1"/>
+        <rect x="55" y="70" width="190" height="120" rx="2" fill="#161616" stroke="rgba(0,255,133,0.2)" stroke-width="1"/>
+        <rect x="65" y="80" width="170" height="100" rx="1" fill="#0f0f0f"/>
+        <rect x="70" y="86" width="80" height="6" rx="1" fill="rgba(0,255,133,0.4)"/>
+        <rect x="70" y="96" width="120" height="3" rx="1" fill="rgba(255,255,255,0.1)"/>
+        <rect x="70" y="103" width="100" height="3" rx="1" fill="rgba(255,255,255,0.07)"/>
+        <rect x="70" y="110" width="70" height="3" rx="1" fill="rgba(255,255,255,0.07)"/>
+        <rect x="155" y="86" width="70" height="70" rx="2" fill="rgba(0,255,133,0.08)" stroke="rgba(0,255,133,0.15)" stroke-width="0.5"/>
+        <circle cx="190" cy="121" r="20" fill="none" stroke="rgba(0,255,133,0.3)" stroke-width="1"/>
+        <circle cx="190" cy="121" r="10" fill="rgba(0,255,133,0.15)"/>
+        <rect x="135" y="190" width="30" height="14" rx="1" fill="#161616" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <rect x="120" y="204" width="60" height="4" rx="1" fill="#1e1e1e"/>
+        <rect x="30" y="230" width="240" height="6" rx="1" fill="#1e1e1e" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <rect x="50" y="210" width="22" height="18" rx="1" fill="#0f0f0f" stroke="rgba(0,255,133,0.2)" stroke-width="1"/>
+        <rect x="230" y="200" width="28" height="28" rx="14" fill="#161616" stroke="rgba(0,255,133,0.15)" stroke-width="1"/>
+        <circle cx="244" cy="214" r="6" fill="rgba(0,255,133,0.2)"/>
+        <rect x="200" y="212" width="3" height="16" rx="1" fill="rgba(0,255,133,0.5)" transform="rotate(-15 201 220)"/>
+        <line x1="20" y1="260" x2="280" y2="260" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="150" y1="40" x2="150" y2="360" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <circle cx="260" cy="60" r="30" fill="none" stroke="rgba(0,255,133,0.08)" stroke-width="1"/>
+        <circle cx="40" cy="350" r="22" fill="none" stroke="rgba(0,255,133,0.06)" stroke-width="1"/>
+        </svg>
+    </div>
+    </div>
+</div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="contact-info reveal">
+      <div class="section-label">Kontak</div>
+      <h2>Ceritakan<br><span style="color:var(--neon)">Proyek</span> Anda</h2>
+      <p>Kami senang mendengar tentang visi dan tantangan Anda. Tim kami siap membantu mewujudkan identitas visual yang tepat sasaran.</p>
+      <div class="contact-details">
+        <div class="contact-item">
+          <div class="contact-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <span>hello@nexusstudio.id</span>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <span>+62 812 3456 7890</span>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <span>Jl. Sudirman No. 88, Jakarta Selatan</span>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form reveal">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nama Lengkap</label>
+          <input type="text" class="form-input" placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" placeholder="john@company.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Perusahaan / Brand</label>
+        <input type="text" class="form-input" placeholder="Nama perusahaan Anda">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Layanan yang Dibutuhkan</label>
+        <select class="form-select">
+          <option value="" disabled selected>Pilih layanan...</option>
+          <option>Brand Identity</option>
+          <option>Desain Grafis</option>
+          <option>UI/UX Design</option>
+          <option>Motion Graphics</option>
+          <option>Packaging Design</option>
+          <option>Social Media Kit</option>
+          <option>Paket Lengkap</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Budget Estimasi</label>
+        <select class="form-select">
+          <option value="" disabled selected>Pilih range budget...</option>
+          <option>Rp 5 – 15 Juta</option>
+          <option>Rp 15 – 50 Juta</option>
+          <option>Rp 50 – 150 Juta</option>
+          <option>Rp 150 Juta+</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ceritakan Proyek Anda</label>
+        <textarea class="form-textarea" placeholder="Deskripsikan kebutuhan, tujuan, dan timeline proyek Anda..."></textarea>
+      </div>
+      <button class="btn-primary form-submit" onclick="handleSubmit(this)" style="width:100%; justify-content:center;">
+        Kirim Pesan
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <p class="form-note">Kami akan merespons dalam 1×24 jam kerja.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-brand">NEX<span>U</span>S</div>
+    <div class="footer-copy">© 2024 Nexus Creative Studio. All rights reserved.</div>
+  </div>
+  <div class="footer-links">
+    <a href="#services">Layanan</a>
+    <a href="#portfolio">Portofolio</a>
+    <a href="#process">Proses</a>
+    <a href="#testimonials">Klien</a>
+    <a href="#about">Tentang</a>
+    <a href="#contact">Kontak</a>
+  </div>
+  <div class="footer-socials">
+    <a href="#" class="social-btn" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+    </a>
+    <a href="#" class="social-btn" aria-label="Behance">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h7a4 4 0 0 1 0 8H2z"/><path d="M2 14h9a4 4 0 0 1 0 8H2z"/><path d="M15 6h7"/><path d="M14 10a5 5 0 0 1 10 0c0 1.5-2 3-5 3s-5-1.5-5-3z"/></svg>
+    </a>
+    <a href="#" class="social-btn" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+    </a>
+    <a href="#" class="social-btn" aria-label="Dribbble">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+  // ── 3D Mouse Tracking ──
+  const robot = document.getElementById('robot');
+  const scene = document.getElementById('scene3d');
+
+  document.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 2;
+    const y = (e.clientY / window.innerHeight - 0.5) * 2;
+
+    if (robot) {
+      robot.style.transform = `rotateY(${x * 15}deg) rotateX(${-y * 10}deg)`;
+    }
+
+    // Glow cursor
+    const cursor = document.getElementById('glow-cursor');
+    if (cursor) {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    }
+  });
+
+  // ── Scroll Reveal ──
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // ── Filter Buttons ──
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // ── Form Submit ──
+  function handleSubmit(btn) {
+    const original = btn.innerHTML;
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Terkirim!`;
+    btn.style.background = '#00cc6a';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.innerHTML = original;
+      btn.style.background = 'var(--neon)';
+      btn.disabled = false;
+    }, 3000);
+  }
+
+  // ── Mobile Menu ──
+  function toggleMenu() {
+    const navUl = document.querySelector('nav ul');
+    const navCta = document.querySelector('.nav-cta');
+    const isOpen = navUl.style.display === 'flex';
+    if (isOpen) {
+    navUl.style.display = '';
+    if (navCta) navCta.style.display = '';
+    } else {
+    navUl.style.cssText = 'display:flex;flex-direction:column;position:fixed;top:65px;left:0;right:0;background:rgba(8,8,8,0.97);padding:2rem 5%;gap:1.5rem;border-bottom:1px solid rgba(255,255,255,0.07);z-index:99;';
+    }
+}
+
+  // ── Smooth Scroll ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+        const navUl = document.querySelector('nav ul');
+        navUl.style.cssText = '';
+    }
+    });
+});
+</script>
+</body>
+</html>
